@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
+/* eslint-disable no-useless-escape */
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -29,6 +30,7 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+/* eslint-enable no-useless-escape */
 
 userSchema.pre('save', function saveUser(next) {
   const user = this;
