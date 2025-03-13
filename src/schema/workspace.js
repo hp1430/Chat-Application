@@ -8,7 +8,7 @@ const workspaceSchema = new mongoose.Schema(
       unique: true
     },
     description: {
-      type: string
+      type: String
     },
     members: [
       {
