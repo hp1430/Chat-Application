@@ -19,6 +19,14 @@ export default function crudRepository(model) {
     update: async function (id, data) {
       const response = await model.findByIdAndUpdate(id, data, { new: true });
       return response;
+    },
+    deleteMany: async function (modelIds) {
+      const response = await model.deleteMany({
+        _id: {
+          $in: modelIds
+        }
+      });
+      return response;
     }
   };
 }
