@@ -20,7 +20,9 @@ export const signUpService = async (data) => {
         error.message
       );
     }
-    if (error.name === 'MongoServerError' && error.code === 11000) {
+    const mongoError = error.cause || error;
+
+    if (mongoError.name === 'MongoServerError' && mongoError.code === 11000) {
       throw new ValidationError(
         {
           error: ['User already exists']
@@ -28,6 +30,7 @@ export const signUpService = async (data) => {
         'User already exists'
       );
     }
+    throw new Error('Unexpected error in signUpService');
   }
 };
 
@@ -54,7 +57,7 @@ export const signInService = async (data) => {
     }
 
     return {
-      username: user.userName,
+      username: user.username,
       avatar: user.avatar,
       email: user.email,
       token: createJWT({ id: user._id, email: user.email })

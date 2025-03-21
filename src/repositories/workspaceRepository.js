@@ -5,9 +5,17 @@ import Workspace from '../schema/workspace.js';
 import ClientError from '../utils/errors/clientError.js';
 import channelRepository from './channelRepository.js';
 import crudRepository from './crudRepository.js';
+import mongoose from 'mongoose';
 
 const workspaceRepository = {
   ...crudRepository(Workspace),
+  getWorkspaceDetailsById: async function (workspaceId) {
+    const workspace = await Workspace.findById(workspaceId)
+      .populate('members.memberId', 'username email avatar')
+      .populate('channels');
+
+    return workspace;
+  },
   getWorkspaceByName: async function (workspaceName) {
     const workspace = await Workspace.findOne({ name: workspaceName });
 
@@ -34,6 +42,8 @@ const workspaceRepository = {
   },
   addMemberToWorkspace: async function (workspaceId, memberID, role) {
     const workspace = await Workspace.findById(workspaceId);
+
+    console.log("Member id in repository layer", memberID);
 
     if (!workspace) {
       throw new ClientError({
@@ -66,7 +76,7 @@ const workspaceRepository = {
     }
 
     workspace.members.push({
-      memberID,
+      memberId: new mongoose.Types.ObjectId(memberID), // Works correctly
       role
     });
 
