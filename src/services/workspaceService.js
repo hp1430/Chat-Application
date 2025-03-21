@@ -9,12 +9,17 @@ import ValidationError from '../utils/errors/validationError.js';
 
 const isUserAdminOfWorkspace = (workspace, userId) => {
   return workspace.members.find(
-    (member) => member.memberId.toString() === userId && member.role === 'admin'
+    (member) =>
+      (member.memberId.toString() === userId ||
+        member.memberId._id.toString() === userId) &&
+      member.role === 'admin'
   );
 };
 
 const isUserMemberOfWorkspace = (workspace, userId) => {
-  return workspace.members.find((member) => member.memberId.toString() === userId);
+  return workspace.members.find(
+    (member) => member.memberId.toString() === userId
+  );
 };
 
 const isChannelAlreadyPartOfWorkspace = (workspace, channelName) => {
@@ -33,7 +38,7 @@ export const createWorkspaceService = async (workspaceData) => {
       joinCode
     });
 
-    console.log("______", workspaceData.owner)
+    console.log('______', workspaceData.owner);
 
     await workspaceRepository.addMemberToWorkspace(
       response._id,
@@ -108,7 +113,7 @@ export const deleteWorkspaceService = async (workspaceId, userId) => {
 };
 
 export const getWorkspaceService = async (workspaceId, userId) => {
-  console.log("userId in getWorkspaceService", userId);
+  console.log('userId in getWorkspaceService', userId);
   try {
     const workspace = await workspaceRepository.getById(workspaceId);
     if (!workspace) {
@@ -209,12 +214,12 @@ export const addMemberToWorkspaceService = async (
     }
 
     const isAdmin = isUserAdminOfWorkspace(workspace, userId);
-    if(!isAdmin) {
+    if (!isAdmin) {
       throw new ClientError({
         explanation: 'User is not an admin of the workspace',
         message: 'User is not an admin of the workspace',
         statusCode: StatusCodes.UNAUTHORIZED
-      })
+      });
     }
     const isValidUser = await userRepository.getById(memberId);
     if (!isValidUser) {
@@ -250,7 +255,8 @@ export const addChannelToWorkspaceService = async (
   userId
 ) => {
   try {
-    const workspace = await workspaceRepository.getById(workspaceId);
+    const workspace =
+      await workspaceRepository.getWorkspaceDetailsById(workspaceId);
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data sent from client',
@@ -258,7 +264,7 @@ export const addChannelToWorkspaceService = async (
         statusCode: StatusCodes.NOT_FOUND
       });
     }
-    const isAdmin = isUserAdminOfWorkspace(userId);
+    const isAdmin = isUserAdminOfWorkspace(workspace, userId);
     if (!isAdmin) {
       throw new ClientError({
         explanation: 'User is not admin of workspace',

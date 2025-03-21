@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
+import mongoose from 'mongoose';
 
 import User from '../schema/user.js';
 import Workspace from '../schema/workspace.js';
 import ClientError from '../utils/errors/clientError.js';
 import channelRepository from './channelRepository.js';
 import crudRepository from './crudRepository.js';
-import mongoose from 'mongoose';
 
 const workspaceRepository = {
   ...crudRepository(Workspace),
@@ -43,7 +43,7 @@ const workspaceRepository = {
   addMemberToWorkspace: async function (workspaceId, memberID, role) {
     const workspace = await Workspace.findById(workspaceId);
 
-    console.log("Member id in repository layer", memberID);
+    console.log('Member id in repository layer', memberID);
 
     if (!workspace) {
       throw new ClientError({
@@ -96,20 +96,9 @@ const workspaceRepository = {
       });
     }
 
-    const isChannelAlreadyAdded = workspace.channels.find(
-      (channel) => channel.name === channel.name
-    );
-
-    if (isChannelAlreadyAdded) {
-      throw new ClientError({
-        explanation: 'Invalid data sent from the client',
-        message: 'Channel is already added to the workspace',
-        statusCode: StatusCodes.FORBIDDEN
-      });
-    }
-
     const channel = await channelRepository.create({
-      name: channelName
+      name: channelName,
+      workspaceId
     });
 
     workspace.channels.push(channel);

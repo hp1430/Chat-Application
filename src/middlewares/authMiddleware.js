@@ -33,7 +33,7 @@ export const isAuthenticated = async (req, res, next) => {
     }
 
     const user = await userRepository.getById(response.id);
-    if(!user) {
+    if (!user) {
       return res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
           explanation: 'Invalid data sent from the client',
