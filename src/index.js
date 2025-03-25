@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import bullServerAdapter from './config/bullBoardConfig.js';
 import connectDB from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
+import channelSocketHandler from './controllers/channelSocketController.js';
 import messageHandlers from './controllers/messageSocketController.js';
 import apiRouter from './routes/apiRoutes.js';
 
@@ -30,6 +31,7 @@ io.on('connection', (socket) => {
   //   console.log('messageFromClient', data);
   // })
   messageHandlers(io, socket);
+  channelSocketHandler(io, socket);
 });
 
 server.listen(PORT, async () => {
