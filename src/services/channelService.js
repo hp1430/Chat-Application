@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 
 import channelRepository from '../repositories/channelRepository.js';
+import messageRepository from '../repositories/messageRepository.js';
 import ClientError from '../utils/errors/clientError.js';
 import { isUserMemberOfWorkspace } from './workspaceService.js';
 
@@ -28,7 +29,22 @@ export const getChannelByIdService = async (channelId, userId) => {
         statusCode: StatusCodes.UNAUTHORIZED
       });
     }
-    return channel;
+
+    const messages = await messageRepository.getPaginatedMessages(
+      { channelId },
+      1,
+      20
+    );
+
+    return {
+      messages,
+      _id: channel._id,
+      name: channel.name,
+      description: channel.description,
+      workspaceId: channel.workspaceId,
+      createdAt: channel.createdAt,
+      updatedAt: channel.updatedAt
+    };
   } catch (error) {
     console.log('Get channel by id error: ', error);
     throw error;
