@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String
+    },
+    isVerified: {
+      type: Boolean,
+      required: [true, 'Email Verification is required'],
+      default: false
     }
   },
   { timestamps: true }

@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
-import { PASSWORD_RESET_URL } from '../config/serverConfig.js';
+import { BASE_URL } from '../config/serverConfig.js';
 import { addEmailToMailQueue } from '../producers/mailQueueProducer.js';
 import userRepository from '../repositories/userRepository.js';
 import { createJWT, verifyJWT } from '../utils/common/authUtils.js';
-import { passwordReserMail } from '../utils/common/mailObject.js';
+import { passwordResetMail } from '../utils/common/mailObject.js';
 import ClientError from '../utils/errors/clientError.js';
 
 export const requestPasswordResetService = async (email) => {
@@ -20,10 +20,10 @@ export const requestPasswordResetService = async (email) => {
     }
     const token = createJWT({ id: user._id, email: user.email });
 
-    const resetURL = `${PASSWORD_RESET_URL}?id=${user._id}&token=${token}`;
+    const resetURL = `${BASE_URL}/passwordreset?id=${user._id}&token=${token}`;
 
     addEmailToMailQueue({
-      ...passwordReserMail(resetURL),
+      ...passwordResetMail(resetURL),
       to: user.email
     });
   } catch (error) {

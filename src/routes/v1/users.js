@@ -1,6 +1,11 @@
 import express from 'express';
 
-import { signIn, signUp } from '../../controllers/userController.js';
+import {
+  emailVerificationCodeRequestController,
+  emailVerificationController,
+  signIn,
+  signUp
+} from '../../controllers/userController.js';
 import {
   userSignInSchema,
   userSignUpSchema
@@ -11,5 +16,7 @@ const router = express.Router();
 
 router.post('/signup', validate(userSignUpSchema), signUp);
 router.post('/signin', validate(userSignInSchema), signIn);
+router.post('/verify', emailVerificationCodeRequestController);
+router.put('/verify/:token', emailVerificationController);
 
 export default router;

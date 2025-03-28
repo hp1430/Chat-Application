@@ -22,4 +22,4 @@ export const REDIS_HOST = process.env.REDIS_HOST;
 
 export const REDIS_PORT = process.env.REDIS_PORT;
 
-export const PASSWORD_RESET_URL = process.env.PASSWORD_RESET_URL;
+export const BASE_URL = process.env.BASE_URL;
