@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
-import { BASE_URL } from '../config/serverConfig.js';
+import { REACT_BASE_URL } from '../config/serverConfig.js';
 import { addEmailToMailQueue } from '../producers/mailQueueProducer.js';
 import userRepository from '../repositories/userRepository.js';
 import { createJWT, verifyJWT } from '../utils/common/authUtils.js';
@@ -20,7 +20,7 @@ export const requestPasswordResetService = async (email) => {
     }
     const token = createJWT({ id: user._id, email: user.email });
 
-    const resetURL = `${BASE_URL}/passwordreset?id=${user._id}&token=${token}`;
+    const resetURL = `${REACT_BASE_URL}/passwordreset?id=${user._id}&token=${token}`;
 
     addEmailToMailQueue({
       ...passwordResetMail(resetURL),

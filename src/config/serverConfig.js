@@ -23,3 +23,5 @@ export const REDIS_HOST = process.env.REDIS_HOST;
 export const REDIS_PORT = process.env.REDIS_PORT;
 
 export const BASE_URL = process.env.BASE_URL;
+
+export const REACT_BASE_URL = process.env.REACT_BASE_URL;
