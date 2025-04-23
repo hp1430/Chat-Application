@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
-import { BASE_URL } from '../config/serverConfig.js';
+import { REACT_BASE_URL } from '../config/serverConfig.js';
 import { addEmailToMailQueue } from '../producers/mailQueueProducer.js';
 import userRepository from '../repositories/userRepository.js';
 import { createJWT, verifyJWT } from '../utils/common/authUtils.js';
@@ -13,7 +13,7 @@ export const signUpService = async (data) => {
   try {
     const newUser = await userRepository.create(data);
 
-    emailVerificationCodeRequestService(data.email);
+    // emailVerificationCodeRequestService(data.email);
 
     return newUser;
   } catch (error) {
@@ -74,6 +74,7 @@ export const signInService = async (data) => {
       username: user.username,
       avatar: user.avatar,
       email: user.email,
+      _id: user._id,
       token: createJWT({ id: user._id, email: user.email })
     };
   } catch (error) {
@@ -106,7 +107,7 @@ export const emailVerificationService = async (token) => {
 export const emailVerificationCodeRequestService = (email) => {
   try {
     const token = createJWT({ email: email });
-    const verificationURL = `${BASE_URL}/users/verify/${token}`;
+    const verificationURL = `${REACT_BASE_URL}/users/verify/${token}`;
     addEmailToMailQueue({
       ...emailVerificationMail(verificationURL),
       to: email
