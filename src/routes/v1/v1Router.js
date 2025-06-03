@@ -4,6 +4,7 @@ import channelRouter from './channel.js';
 import memberRouter from './members.js';
 import messageRouter from './messages.js';
 import requestPasswordReset from './passwordReset.js';
+import paymentRouter from './payment.js';
 import userRouter from './users.js';
 import workspaceRouter from './workspaces.js';
 
@@ -15,5 +16,6 @@ router.use('/channels', channelRouter);
 router.use('/members', memberRouter);
 router.use('/passwordreset', requestPasswordReset);
 router.use('/messages', messageRouter);
+router.use('/payments', paymentRouter);
 
 export default router;
