@@ -24,11 +24,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/ui', bullServerAdapter.getRouter());
 app.use('/api', apiRouter);
+
+app.use('/admin/queues', bullServerAdapter.getRouter());
 
 app.get('/ping', (req, res) => {
   return res.status(StatusCodes.OK).json({ message: 'pong' });
+});
+
+app.use('*', (req, res) => {
+  return res
+    .status(StatusCodes.NOT_FOUND)
+    .json({ message: 'Route not found' });
 });
 
 io.on('connection', (socket) => {
