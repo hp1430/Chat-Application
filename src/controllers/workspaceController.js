@@ -78,7 +78,6 @@ export const deleteWorkspaceController = async (req, res) => {
 
 export const getWorkspaceController = async (req, res) => {
   try {
-    console.log('User id in get workspace controller', req.user);
     const response = await getWorkspaceService(
       req.params.workspaceId,
       req.user

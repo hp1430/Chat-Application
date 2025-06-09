@@ -114,7 +114,6 @@ export const deleteWorkspaceService = async (workspaceId, userId) => {
 };
 
 export const getWorkspaceService = async (workspaceId, userId) => {
-  console.log('userId in getWorkspaceService', userId);
   try {
     const workspace =
       await workspaceRepository.getWorkspaceDetailsById(workspaceId);
