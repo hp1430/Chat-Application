@@ -325,6 +325,17 @@ export const joinWorkspaceService = async (workspaceId, joinCode, userId) => {
   try {
     const workspace =
       await workspaceRepository.getWorkspaceDetailsById(workspaceId);
+    const workspaceByJoinCode =
+      await workspaceRepository.getWorkspaceByJoinCode(joinCode, userId);
+    if (!workspaceByJoinCode) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from client',
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+    const workspaceIdFromJoinCode = workspaceByJoinCode._id.toString();
+
     if (!workspace) {
       throw new ClientError({
         explanation: 'Invalid data sent from client',
@@ -333,16 +344,16 @@ export const joinWorkspaceService = async (workspaceId, joinCode, userId) => {
       });
     }
 
-    if (workspace.joinCode !== joinCode) {
-      throw new ClientError({
-        explanation: 'Invalid data sent from client',
-        message: 'Invalid join code',
-        statusCode: StatusCodes.UNAUTHORIZED
-      });
-    }
+    // if (workspace.joinCode !== joinCode) {
+    //   throw new ClientError({
+    //     explanation: 'Invalid data sent from client',
+    //     message: 'Invalid join code',
+    //     statusCode: StatusCodes.UNAUTHORIZED
+    //   });
+    // }
 
     const updatedWorkspace = await workspaceRepository.addMemberToWorkspace(
-      workspaceId,
+      workspaceIdFromJoinCode,
       userId,
       'member'
     );
